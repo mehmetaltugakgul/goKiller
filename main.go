@@ -3,12 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/fatih/color"
+	"github.com/shirou/gopsutil/process"
 	"os"
 	"sort"
 	"strings"
-
-	"github.com/fatih/color"
-	"github.com/shirou/gopsutil/process"
 )
 
 var asciiText = `
@@ -30,6 +29,7 @@ type ProcessInfo struct {
 func main() {
 
 	fmt.Println(asciiText)
+	fmt.Println(color.GreenString("The goKiller app is a simple command-line utility written in Go\nthat allows you to list running processes and optionally terminate\nthem by name.It provides an easy-to-use interface for viewing and\nmanaging processes with a focus on RAM (memory) usage."))
 
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -37,8 +37,8 @@ func main() {
 		color.Cyan("\nChoose an option:\n")
 		color.Green("1. List processes\n")
 		color.Red("2. Kill a process\n")
-		color.Yellow("3. Exit\n")
-		fmt.Print("Enter your choice: ")
+		color.Yellow("3. Exit\n\n")
+		fmt.Print("Enter your choice(1 or 2 or 3):")
 
 		scanner.Scan()
 		choice := scanner.Text()
