@@ -7,6 +7,7 @@ import (
 	"github.com/shirou/gopsutil/process"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -38,9 +39,11 @@ func main() {
 	for {
 		color.Cyan("\nChoose an option:\n")
 		color.Green("1. List processes\n")
-		color.Red("2. Kill a process\n")
-		color.Yellow("3. Exit\n\n")
-		fmt.Print("Enter your choice (1 or 2 or 3): ")
+		color.Red("2. Kill a process by name\n")
+		color.Yellow("3. Kill a process by PID\n")
+		color.Blue("4. Search processes by name\n")
+		color.Magenta("5. Exit\n")
+		fmt.Print("Enter your choice (1 or 2 or 3 or 4 or 5): ")
 
 		scanner.Scan()
 		choice := scanner.Text()
@@ -53,10 +56,113 @@ func main() {
 			scanner.Scan()
 			killProcessByName(scanner.Text())
 		case "3":
+			color.Cyan("Enter PID of the process to kill: ")
+			scanner.Scan()
+			pidStr := scanner.Text()
+			pid, err := strconv.Atoi(pidStr)
+			if err != nil {
+				color.Red("Invalid PID. Please enter a valid integer PID.\n")
+				continue
+			}
+			killProcessByPID(pid)
+		case "4":
+			color.Cyan("Enter a search term for process names: ")
+			scanner.Scan()
+			searchTerm := scanner.Text()
+			searchProcessesByName(searchTerm)
+		case "5":
 			color.Magenta("Exiting.\n")
 			return
 		default:
 			color.Red("Invalid choice, please try again.\n")
+		}
+	}
+}
+
+func killProcessByPID(pid int) {
+	process, err := process.NewProcess(int32(pid))
+	if err != nil {
+		color.Red("Error fetching process information:", err)
+		return
+	}
+
+	pName, err := process.Name()
+	if err != nil {
+		color.Red("Error fetching process name:", err)
+		return
+	}
+
+	fmt.Printf("Killing process: %s (PID: %d)\n", pName, pid)
+	if err := process.Terminate(); err != nil {
+		color.Red("Failed to kill process: %s\n", err)
+	} else {
+		color.Green("Process killed successfully\n")
+	}
+}
+
+func searchProcessesByName(searchTerm string) {
+	processes, err := process.Processes()
+	if err != nil {
+		fmt.Println("Error fetching processes:", err)
+		return
+	}
+
+	var matchingProcesses []ProcessInfo
+
+	for _, p := range processes {
+		name, err := p.Name()
+		if err != nil {
+			continue
+		}
+
+		if strings.Contains(strings.ToLower(name), strings.ToLower(searchTerm)) {
+			pid := p.Pid
+
+			memInfo, err := p.MemoryInfo()
+			if err != nil {
+				continue
+			}
+			memUsageMB := float64(memInfo.RSS) / 1024.0 / 1024.0
+
+			cpuPercent, err := p.Percent(0)
+			if err != nil {
+				continue
+			}
+
+			createTime, err := p.CreateTime()
+			if err != nil {
+				continue
+			}
+			startTime := time.Unix(int64(createTime), 0).String()
+
+			username, err := p.Username()
+			if err != nil {
+				continue
+			}
+
+			matchingProcesses = append(matchingProcesses, ProcessInfo{
+				Name:      name,
+				PID:       pid,
+				RamUsage:  memUsageMB,
+				CpuUsage:  cpuPercent,
+				User:      username,
+				StartTime: startTime,
+			})
+		}
+	}
+
+	if len(matchingProcesses) == 0 {
+		fmt.Printf("No processes found matching the search term '%s'.\n", searchTerm)
+	} else {
+		sort.Slice(matchingProcesses, func(i, j int) bool {
+			return matchingProcesses[i].RamUsage > matchingProcesses[j].RamUsage
+		})
+
+		fmt.Printf("%-40s %-10s %-10s %-10s %-15s %-30s\n", "Process Name", "PID", "RAM (MB)", "CPU (%)", "User", "Start Time")
+		fmt.Println(strings.Repeat("-", 100))
+
+		for _, processInfo := range matchingProcesses {
+			fmt.Printf("%-40s %-10d %-10.2f %-10.2f %-15s %-30s\n", processInfo.Name, processInfo.PID, processInfo.RamUsage, processInfo.CpuUsage, processInfo.User, processInfo.StartTime)
 		}
 	}
 }

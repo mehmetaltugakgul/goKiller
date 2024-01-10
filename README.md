@@ -13,6 +13,10 @@ The goKiller app is a simple command-line utility written in Go that allows you 
 
 - **Kill a Process:** Terminate a running process by entering its name.
 
+- **Kill a Process by PID:** Terminate a running process by entering its PID.
+
+- **Search for a Process:** Search for a process by entering its name.
+
 - **Exit the App:** Quit the goKiller App.
 
 ## Installation and Usage
