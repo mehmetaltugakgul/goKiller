@@ -8,6 +8,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"time"
 )
 
 var asciiText = `
@@ -17,19 +18,20 @@ var asciiText = `
  / /_/  >  <_> )    |  \|  |  |_|  |_\  ___/|  | \/
  \___  / \____/|____|__ \__|____/____/\___  >__|   
 /_____/                \/                 \/       
-                                                   
 `
 
 type ProcessInfo struct {
-	Name     string
-	PID      int32
-	RamUsage float64
+	Name      string
+	PID       int32
+	RamUsage  float64
+	CpuUsage  float64
+	User      string
+	StartTime string
 }
 
 func main() {
-
 	fmt.Println(asciiText)
-	fmt.Println(color.GreenString("The goKiller app is a simple command-line utility written in Go\nthat allows you to list running processes and optionally terminate\nthem by name.It provides an easy-to-use interface for viewing and\nmanaging processes with a focus on RAM (memory) usage."))
+	fmt.Println(color.GreenString("The goKiller app is a simple command-line utility written in Go\nthat allows you to list running processes and optionally terminate\nthem by name. It provides an easy-to-use interface for viewing and\nmanaging processes with a focus on RAM (memory) usage."))
 
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -38,7 +40,7 @@ func main() {
 		color.Green("1. List processes\n")
 		color.Red("2. Kill a process\n")
 		color.Yellow("3. Exit\n\n")
-		fmt.Print("Enter your choice(1 or 2 or 3):")
+		fmt.Print("Enter your choice (1 or 2 or 3): ")
 
 		scanner.Scan()
 		choice := scanner.Text()
@@ -77,7 +79,7 @@ func killProcessByName(name string) {
 		if strings.EqualFold(pName, name) {
 			found = true
 			fmt.Printf("Killing process: %s (PID: %d)\n", pName, p.Pid)
-			if err := p.Kill(); err != nil {
+			if err := p.Terminate(); err != nil {
 				color.Red("Failed to kill process: %s\n", err)
 			} else {
 				color.Green("Process killed successfully\n")
@@ -114,10 +116,29 @@ func printProcesses() {
 		}
 		memUsageMB := float64(memInfo.RSS) / 1024.0 / 1024.0
 
+		cpuPercent, err := p.CPUPercent()
+		if err != nil {
+			continue
+		}
+
+		createTime, err := p.CreateTime()
+		if err != nil {
+			continue
+		}
+		startTime := time.Unix(createTime/1000, 0).Format("2006-01-02 15:04:05")
+
+		username, err := p.Username()
+		if err != nil {
+			continue
+		}
+
 		processList = append(processList, ProcessInfo{
-			Name:     name,
-			PID:      pid,
-			RamUsage: memUsageMB,
+			Name:      name,
+			PID:       pid,
+			RamUsage:  memUsageMB,
+			CpuUsage:  cpuPercent,
+			User:      username,
+			StartTime: startTime,
 		})
 	}
 
@@ -125,10 +146,10 @@ func printProcesses() {
 		return processList[i].RamUsage > processList[j].RamUsage
 	})
 
-	fmt.Printf("%-40s %-10s %-10s\n", "Process Name", "PID", "RAM (MB)")
-	fmt.Println(strings.Repeat("-", 60))
+	fmt.Printf("%-40s %-10s %-10s %-10s %-15s %-30s\n", "Process Name", "PID", "RAM (MB)", "CPU (%)", "User", "Start Time")
+	fmt.Println(strings.Repeat("-", 100))
 
-	for _, processName := range processList {
-		fmt.Printf("%-40s %-10d %-10.2f\n", processName.Name, processName.PID, processName.RamUsage)
+	for _, processInfo := range processList {
+		fmt.Printf("%-40s %-10d %-10.2f %-10.2f %-15s %-30s\n", processInfo.Name, processInfo.PID, processInfo.RamUsage, processInfo.CpuUsage, processInfo.User, processInfo.StartTime)
 	}
 }

@@ -37,7 +37,7 @@ Once Go is installed, follow these steps to run the app:
 4. Build the app:
 
    ```bash
-   go build -o goKiller
+   go build
    ```
    
 5. Run the app:
