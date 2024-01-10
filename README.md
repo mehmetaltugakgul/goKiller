@@ -5,7 +5,7 @@
 
 ## Introduction
 
-The goKiller app is a simple command-line utility written in Go that allows you to list running processes and optionally terminate them by name. It provides an easy-to-use interface for viewing and managing processes with a focus on RAM (memory) usage. The app uses the `github.com/shirou/gopsutil/process` package to interact with and retrieve information about running processes.
+The goKiller app is a simple command-line utility written in Go that allows you to list running processes and optionally terminate them by name. It provides an easy-to-use interface for viewing and managing processes with a focus on RAM (memory) usage.
 
 ## Features
 
