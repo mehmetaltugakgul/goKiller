@@ -1,4 +1,5 @@
-![image](https://github.com/mehmetaltugakgul/goKiller/assets/10194009/b2db04a6-aeff-444e-b568-fd757cfd88a8)
+![image](https://github.com/mehmetaltugakgul/goKiller/assets/10194009/0517c81f-9d8b-4f95-acdf-b9edef6ed9ee)
+
 
 # goKiller App
 
@@ -14,7 +15,7 @@ The goKiller app is a simple command-line utility written in Go that allows you 
 
 - **Exit the App:** Quit the goKiller App.
 
-## Installation
+## Installation and Usage
 
 Before you can use the goKiller App, make sure you have Go installed on your system. You can download and install Go from the official website: [https://golang.org/dl/](https://golang.org/dl/)
 
@@ -25,7 +26,27 @@ Once Go is installed, follow these steps to run the app:
 2. Clone the GitHub repository containing the app's source code:
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/mehmetaltugakgul/goKiller
 
-3. 
+3. Navigate to the directory containing the app's source code:
+
+   ```bash
+   cd goKiller
+   ```
+
+4. Build the app:
+
+   ```bash
+   go build
+   ```
+
+5. Run the app:
+
+   ```bash
+   ./goKiller
+   ```
+
+   **Note:** If you are using Windows, you can run the app by double-clicking the `goKiller.exe` file in the directory containing the app's source code.
+
+
  
