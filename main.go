@@ -125,10 +125,10 @@ func printProcesses() {
 		return processList[i].RamUsage > processList[j].RamUsage
 	})
 
-	fmt.Printf("%-30s %-10s %-10s\n", "Process Name", "PID", "RAM (MB)")
-	fmt.Println(strings.Repeat("-", 50))
+	fmt.Printf("%-40s %-10s %-10s\n", "Process Name", "PID", "RAM (MB)")
+	fmt.Println(strings.Repeat("-", 60))
 
-	for _, process := range processList {
-		fmt.Printf("%-30s %-10d %-10.2f\n", process.Name, process.PID, process.RamUsage)
+	for _, processName := range processList {
+		fmt.Printf("%-40s %-10d %-10.2f\n", processName.Name, processName.PID, processName.RamUsage)
 	}
 }
