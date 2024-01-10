@@ -55,6 +55,7 @@ Once Go is installed, follow these steps to run the app:
 
    **Note:** If you are using Windows, you can run the app by double-clicking the `goKiller.exe` file in the directory containing the app's source code.
 
-![image](https://github.com/mehmetaltugakgul/goKiller/assets/10194009/0c574170-e656-4942-9a55-51e7fe6bc27e)
+![image](https://github.com/mehmetaltugakgul/goKiller/assets/10194009/acd07ea0-f06f-428d-ba52-fd596b008ccc)
+
 
  
