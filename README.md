@@ -1,4 +1,4 @@
-![image](https://github.com/mehmetaltugakgul/goKiller/assets/10194009/23eda486-584f-441d-b929-286451961172)
+![image](https://github.com/mehmetaltugakgul/goKiller/assets/10194009/b2db04a6-aeff-444e-b568-fd757cfd88a8)
 
 # goKiller App
 
