@@ -41,7 +41,7 @@ func main() {
 		color.Green("1. List processes\n")
 		color.Red("2. Kill a process by name\n")
 		color.Yellow("3. Kill a process by PID\n")
-		color.Blue("4. Search processes by name\n")
+		color.White("4. Search processes by name\n")
 		color.Magenta("5. Exit\n")
 		fmt.Print("Enter your choice (1 or 2 or 3 or 4 or 5): ")
 
