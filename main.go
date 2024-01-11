@@ -3,13 +3,14 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/fatih/color"
-	"github.com/shirou/gopsutil/process"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/fatih/color"
+	"github.com/shirou/gopsutil/process"
 )
 
 var asciiText = `
@@ -133,7 +134,7 @@ func searchProcessesByName(searchTerm string) {
 			if err != nil {
 				continue
 			}
-			startTime := time.Unix(int64(createTime), 0).String()
+			startTime := time.Unix(createTime/1000, 0).Format("2006-01-02 15:04:05")
 
 			username, err := p.Username()
 			if err != nil {
